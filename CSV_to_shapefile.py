@@ -16,15 +16,15 @@ from shapely.geometry import Point
 xy_table['coordinates'] = xy_table['coordinates'].apply(Point)
 xy_table.head()
 # converting to GeoDataFrame, using our coordinates column as the geometry column
-stations = geopandas.GeoDataFrame(xy_table, geometry = 'coordinates')
-stations.plot()
+points_shp = geopandas.GeoDataFrame(xy_table, geometry = 'coordinates')
+points_shp.plot()
 # creating a Folium map centered around the average latitude and longitude of all coordinate pairs
-map = folium.Map(location=[stations.LATITUD.mean(), stations.LONGITUD.mean()], zoom_start=7)
+map = folium.Map(location=[points_shp.LATITUD.mean(), points_shp.LONGITUD.mean()], zoom_start=7)
 # creating a Folium GeoJSON layer
-points = folium.features.GeoJson(stations.to_json())
+points = folium.features.GeoJson(points_shp.to_json())
 # Adding the GeoJSON points to the Folium map
 map.add_child(points)
 # setting CRS
-stations = stations.set_crs('epsg:4326')
-stations_epsg3117 = stations.to_crs('EPSG:3117')
-stations.to_file(file_name)
+points_shp = points_shp.set_crs('epsg:4326')
+stations_epsg3117 = points_shp.to_crs('EPSG:3117')
+points_shp.to_file(file_name)
